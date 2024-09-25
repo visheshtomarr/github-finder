@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer } from "react";
+import githubReducer from "./GithubReducer";
 
 const GithubContext = createContext();
 
@@ -6,11 +7,17 @@ const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 export const GithubProvider = ({ children }) => {
-    // Declare users and set-state method for users.
-    const [users, setUsers] = useState([]);
+    // Create an initial state of our users and loading.
+    const initialState = {
+        users: [],
+        loading: true,
+    }
 
-    // Delcare loading state and set-state method for users.
-    const [loading, setLoading] = useState(true);
+    // Destructure the useReducer.
+    // 'dispatch' is used to dispatch an action to our reducer, in our
+    // case, 'githubReducer'.
+    const [state, dispatch] = useReducer(githubReducer, initialState);
+
     
     // Function to fetch users from the GITHUB API.
     const fetchUsers = async () => {
@@ -21,15 +28,20 @@ export const GithubProvider = ({ children }) => {
         });
 
         const data = await response.json();
-        setUsers(data);
-        setLoading(false);
+        
+        // This takes an action object and dispatch it the reducer we have created.
+        dispatch({
+            type: "GET_USERS",
+            // Payload is the data that we get from the GITHUB API.
+            payload: data,
+        })
     }
 
     return (
         <GithubContext.Provider
             value={{
-                users,
-                loading,
+                ...state,
+                dispatch,
                 fetchUsers
         }}>
             {children}    
