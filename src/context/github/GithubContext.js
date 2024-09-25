@@ -22,6 +22,8 @@ export const GithubProvider = ({ children }) => {
     //
     // A 'text' will be passed into it which will be the user we want to search.
     const searchUsers = async (text) => {
+        // Function to set state of loader to true just before 
+        // it starts fetching/searching users.
         setLoading();
 
         // Search params.
@@ -46,16 +48,20 @@ export const GithubProvider = ({ children }) => {
     }
 
     // Function to dispatch loading state to reducer.
-    const setLoading = () => dispatch({type: "SET_LOADING"})
+    const setLoading = () => dispatch({ type: "SET_LOADING" })
+
+    // Function to clear users.
+    const clearUsers = () => dispatch({ type: "CLEAR_USERS" })
 
     return (
         <GithubContext.Provider
             value={{
                 ...state,
                 dispatch,
-                searchUsers
+                searchUsers,
+                clearUsers
         }}>
-            {children}    
+            {children}
         </GithubContext.Provider>
     )
 }

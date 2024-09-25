@@ -5,12 +5,15 @@ function UserSearch() {
     // Declare state and set-state method for search text.
     const [searchText, setSearchText] = useState('');
 
-    const { users, searchUsers } = useContext(GithubContext);
+    // Destructure functions passed down from the GithubContext.
+    const { users, searchUsers, clearUsers } = useContext(GithubContext);
 
+    // Function to set search text state.
     const handleChange = (e) => {
         setSearchText(e.target.value);
     }
 
+    // Function to handle form submission and then search and display users.
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -49,7 +52,7 @@ function UserSearch() {
             </div>
             {users.length > 0 && (
                 <div>
-                    <button className="btn btn-ghost btn-lg">Clear</button>
+                    <button className="btn btn-ghost btn-lg" onClick={clearUsers}>Clear</button>
                 </div>
             )}
         </div>
