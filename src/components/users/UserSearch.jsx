@@ -5,7 +5,7 @@ function UserSearch() {
     // Declare state and set-state method for search text.
     const [searchText, setSearchText] = useState('');
 
-    const {users} = useContext(GithubContext);
+    const { users, searchUsers } = useContext(GithubContext);
 
     const handleChange = (e) => {
         setSearchText(e.target.value);
@@ -17,8 +17,7 @@ function UserSearch() {
         if(searchText === ''){
             alert("Please enter something to search!");
         } else {
-            // todo! - search users.
-            
+            searchUsers(searchText);
             setSearchText(''); 
         }
     }
