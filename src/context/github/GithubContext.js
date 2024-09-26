@@ -10,6 +10,7 @@ export const GithubProvider = ({ children }) => {
     // Create an initial state of our users and loading.
     const initialState = {
         users: [],
+        user: {},
         loading: false,
     }
 
@@ -20,7 +21,7 @@ export const GithubProvider = ({ children }) => {
 
     // Function to search users from the GITHUB API.
     //
-    // A 'text' will be passed into it which will be the user we want to search.
+    // A 'text' will be passed into it which will be the users we want to search.
     const searchUsers = async (text) => {
         // Function to set state of loader to true just before 
         // it starts fetching/searching users.
@@ -47,6 +48,36 @@ export const GithubProvider = ({ children }) => {
         })
     }
 
+    // Function to search a single user from GITHUB API.
+    //
+    // A login id will be passed into it which will be the user we clicked on.
+    const searchUser = async (login) => {
+        // Function to set state of loader to true just before 
+        // it starts fetching the user.
+        setLoading();
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+            headers: {
+                Authorization: `token ${GITHUB_TOKEN}`
+            }
+        });
+
+        // If there is a bad request and the user is not present, then we will 
+        // redirect to notFound page.
+        if (response.status === 404) {
+            window.location = "/notFound";
+        } else {
+            const data = await response.json();
+        
+            // This takes an action object and dispatch it the reducer we have created.
+            dispatch({
+                type: "GET_USER",
+                // Payload is the data that we get from the GITHUB API.
+                payload: data,
+            })  
+        }
+    }
+
     // Function to dispatch loading state to reducer.
     const setLoading = () => dispatch({ type: "SET_LOADING" })
 
@@ -59,6 +90,7 @@ export const GithubProvider = ({ children }) => {
                 ...state,
                 dispatch,
                 searchUsers,
+                searchUser,
                 clearUsers
         }}>
             {children}
