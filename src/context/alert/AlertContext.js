@@ -4,17 +4,18 @@ import alertReducer from "./AlertReducer";
 const AlertContext = createContext();
 
 export const AlertProvider = ({ children }) => {
+    // Create an initial state for alert.
     const initialState = null;
 
     const [state, dispatch] = useReducer(alertReducer, initialState);
 
-    // Function to set an alert.
+    // Function to fire an alert.
     //
-    // This function will dispatch an alert (SET_ALERT) first to the reducer,
+    // This function will dispatch an alert (FIRE_ALERT) first to the reducer,
     // and then, it will dipatch another alert (REMOVE_ALERT) in 3 seconds to remove it. 
-    const setAlert = (msg, type) => {
+    const fireAlert = (msg, type) => {
         dispatch({
-            type: 'SET_ALERT',
+            type: 'FIRE_ALERT',
             payload: { msg, type },
         });
 
@@ -25,7 +26,7 @@ export const AlertProvider = ({ children }) => {
         <AlertContext.Provider
             value={{
                 alert: state,
-                setAlert
+                fireAlert
             }}
         >
             {children}

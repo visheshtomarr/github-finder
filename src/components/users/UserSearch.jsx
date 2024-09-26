@@ -1,5 +1,6 @@
 import { useState, useContext} from "react";
 import GithubContext from "../../context/github/GithubContext";
+import AlertContext from "../../context/alert/AlertContext";
 
 function UserSearch() {
     // Declare state and set-state method for search text.
@@ -7,6 +8,9 @@ function UserSearch() {
 
     // Destructure functions passed down from the GithubContext.
     const { users, searchUsers, clearUsers } = useContext(GithubContext);
+
+    // Destructure functions passed down from the AlertContext.
+    const { fireAlert } = useContext(AlertContext);
 
     // Function to set search text state.
     const handleChange = (e) => {
@@ -18,7 +22,7 @@ function UserSearch() {
         e.preventDefault();
 
         if(searchText === ''){
-            alert("Please enter something to search!");
+            fireAlert("Please enter something to search!", "error");
         } else {
             searchUsers(searchText);
             setSearchText(''); 
