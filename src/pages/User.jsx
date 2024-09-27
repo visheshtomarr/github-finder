@@ -5,17 +5,32 @@ import { useParams } from "react-router-dom";
 import Spinner from "../components/layout/Spinner";
 import GithubContext from "../context/github/GithubContext";
 import ReposList from "../components/users/repos/ReposList";
+import { searchUser, getUserRepos } from "../context/github/GithubActions";
 
 function User() {
     // Destructure functions passed down from the GithubContext.
-    const { user, searchUser, loading, getUserRepos, repos } = useContext(GithubContext);
+    const { user, loading, repos, dispatch } = useContext(GithubContext);
     
     const params = useParams();
 
     useEffect(() => {
-        searchUser(params.login);
-        getUserRepos(params.login);
-    }, [])
+        dispatch({ type: 'SET_LOADING' });
+        const getUserData = async () => {
+            const userData = await searchUser(params.login);
+            dispatch({
+                type: 'GET_USER',
+                payload: userData,
+            });
+
+            const userReposData = await getUserRepos(params.login);
+            dispatch({
+                type: 'GET_REPOS',
+                payload: userReposData,
+            });
+        }
+
+        getUserData();
+    }, [dispatch, params.login])
 
     // Destructure all the required properties from the user object.
     const {

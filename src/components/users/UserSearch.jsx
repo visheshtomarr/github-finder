@@ -8,7 +8,7 @@ function UserSearch() {
     const [searchText, setSearchText] = useState('');
 
     // Destructure functions passed down from the GithubContext.
-    const { users, dispatch, clearUsers } = useContext(GithubContext);
+    const { users, dispatch } = useContext(GithubContext);
 
     // Destructure functions passed down from the AlertContext.
     const { fireAlert } = useContext(AlertContext);
@@ -64,7 +64,7 @@ function UserSearch() {
             </div>
             {users.length > 0 && (
                 <div>
-                    <button className="btn btn-ghost btn-lg" onClick={clearUsers}>Clear</button>
+                    <button className="btn btn-ghost btn-lg" onClick={() => dispatch({ type: 'CLEAR_USERS'})}>Clear</button>
                 </div>
             )}
         </div>
