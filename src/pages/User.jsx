@@ -54,6 +54,9 @@ function User() {
         return <Spinner />
     }
     
+    // Check for a valid url for user's website.
+    const websiteUrl = blog?.startsWith('http') ? blog : 'https://' + blog;
+
     return (
         <>
             <div className="w-full mx-auto lg:w-10/12">
@@ -109,8 +112,8 @@ function User() {
                                 <div className="stat">
                                     <div className="stat-title text-md text-gray-400">Website</div>
                                     <div className="text-lg stat-value">
-                                        <a href={blog} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">
-                                            {blog}
+                                        <a href={websiteUrl} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">
+                                            {websiteUrl}
                                         </a>
                                     </div>
                                 </div>
