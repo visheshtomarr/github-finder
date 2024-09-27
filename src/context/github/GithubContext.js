@@ -11,6 +11,7 @@ export const GithubProvider = ({ children }) => {
     const initialState = {
         users: [],
         user: {},
+        repos: [],
         loading: false,
     }
 
@@ -78,6 +79,33 @@ export const GithubProvider = ({ children }) => {
         }
     }
 
+    const getUserRepos = async (login) => {
+        // Function to set state of loader to true just before 
+        // it starts fetching user's repositories.
+        setLoading();
+
+        // Search params to fetch the latest 10 repositories.
+        const params = new URLSearchParams({
+            sort: 'created',
+            per_page: 10
+        });
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}/repos?${params}`, {
+            headers: {
+                Authorization: `token ${GITHUB_TOKEN}`
+            }
+        });
+
+        const data = await response.json();
+        
+        // This takes an action object and dispatch it the reducer we have created.
+        dispatch({
+            type: "GET_REPOS",
+            // Payload is the data that we get from the GITHUB API.
+            payload: data,
+        })
+    }
+
     // Function to dispatch loading state to reducer.
     const setLoading = () => dispatch({ type: "SET_LOADING" })
 
@@ -91,7 +119,8 @@ export const GithubProvider = ({ children }) => {
                 dispatch,
                 searchUsers,
                 searchUser,
-                clearUsers
+                clearUsers,
+                getUserRepos
         }}>
             {children}
         </GithubContext.Provider>

@@ -4,15 +4,17 @@ import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/layout/Spinner";
 import GithubContext from "../context/github/GithubContext";
+import ReposList from "../components/users/repos/ReposList";
 
 function User() {
     // Destructure functions passed down from the GithubContext.
-    const { user, searchUser, loading } = useContext(GithubContext);
+    const { user, searchUser, loading, getUserRepos, repos } = useContext(GithubContext);
     
     const params = useParams();
 
     useEffect(() => {
-        searchUser(params.login)
+        searchUser(params.login);
+        getUserRepos(params.login);
     }, [])
 
     // Destructure all the required properties from the user object.
@@ -148,6 +150,8 @@ function User() {
                     </div>
                 </div>
             </div>
+
+            <ReposList repos={repos} />
         </>
     )
 }
