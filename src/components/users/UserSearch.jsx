@@ -1,13 +1,14 @@
 import { useState, useContext} from "react";
 import GithubContext from "../../context/github/GithubContext";
 import AlertContext from "../../context/alert/AlertContext";
+import { searchUsers } from "../../context/github/GithubActions";
 
 function UserSearch() {
     // Declare state and set-state method for search text.
     const [searchText, setSearchText] = useState('');
 
     // Destructure functions passed down from the GithubContext.
-    const { users, searchUsers, clearUsers } = useContext(GithubContext);
+    const { users, dispatch, clearUsers } = useContext(GithubContext);
 
     // Destructure functions passed down from the AlertContext.
     const { fireAlert } = useContext(AlertContext);
@@ -18,13 +19,20 @@ function UserSearch() {
     }
 
     // Function to handle form submission and then search and display users.
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if(searchText === ''){
             fireAlert("Please enter something to search!", "error");
         } else {
-            searchUsers(searchText);
+            dispatch({ type: 'SET_LOADING' });
+
+            const users = await searchUsers(searchText);
+            
+            dispatch({
+                type: 'GET_USERS',
+                payload: users,
+            })
             setSearchText(''); 
         }
     }
